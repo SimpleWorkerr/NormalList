@@ -10,7 +10,7 @@
             {
                 list.PushBack(i);
             }
-
+            list[20] = 20000;
             list.DisplayInfo();
         }
     }

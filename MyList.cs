@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +11,113 @@ namespace NormalList
     {
         private Node<T>? _pHead;
         private Node<T>? _pTail;
+        private int _listSize;
+
+        public T this[int index]
+        {
+            get
+            {
+                int stepCounter;
+
+                if(index < _listSize)
+                {
+                    stepCounter = 0;
+
+                    Node<T>? pTemp = _pHead;
+
+                    if(pTemp != null)
+                    {
+                        while(pTemp.pNext != null && stepCounter < index)
+                        {
+                            pTemp = pTemp.pNext;
+
+                            stepCounter++;
+                        } 
+                        return pTemp.Value;
+                    }
+                    else
+                    {
+                        throw new Exception("Список пуст");
+                    }
+                }
+
+                else
+                {
+                    stepCounter = 0;
+
+                    Node<T>? pTemp = _pTail;
+
+                    if (pTemp != null)
+                    {
+                        while (pTemp.pPrev != null && stepCounter < index)
+                        {
+                            pTemp = pTemp.pPrev;
+
+                            stepCounter++;
+                        }
+                        return pTemp.Value;
+                    }
+                    else
+                    {
+                        throw new Exception("Список пуст");
+                    }
+                }
+            }
+            set
+            {
+                int stepCounter;
+
+                if (index < _listSize)
+                {
+                    stepCounter = 0;
+
+                    Node<T>? pTemp = _pHead;
+
+                    if (pTemp != null)
+                    {
+                        while (pTemp.pNext != null && stepCounter < index)
+                        {
+                            pTemp = pTemp.pNext;
+
+                            stepCounter++;
+                        }
+                        pTemp.Value = value;
+                    }
+                    else
+                    {
+                        throw new Exception("Список пуст");
+                    }
+                }
+
+                else
+                {
+                    Node<T>? pTemp = _pTail;
+
+                    stepCounter = _listSize;
+
+                    if (pTemp != null)
+                    {
+                        while (pTemp.pPrev != null && stepCounter > index)
+                        {
+                            pTemp = pTemp.pPrev;
+
+                            stepCounter--;
+                        }
+                        pTemp.Value = value;
+                    }
+                    else
+                    {
+                        throw new Exception("Список пуст");
+                    }
+                }
+            }
+        }
 
         public MyList() 
         {
             _pHead = null;
             _pTail = null;
+            _listSize = 0;
         }
 
         public void PushFront(T value)
@@ -29,6 +132,8 @@ namespace NormalList
                _pHead = new Node<T>(value, _pHead, null);
             }
 
+            _listSize++;
+
         }
         public void PushBack(T value)
         {
@@ -40,6 +145,8 @@ namespace NormalList
             {
                 _pTail = new Node<T>(value, null, _pTail);
             }
+
+            _listSize++;
         }
 
         public T PopFront()
@@ -52,6 +159,8 @@ namespace NormalList
             {
                 T resultValue = _pHead.Value;
                 _pTail = _pHead.pNext;
+
+                _listSize--;
 
                 return resultValue;
             }
@@ -66,6 +175,8 @@ namespace NormalList
             {
                 T resultValue = _pTail.Value;
                 _pTail = _pTail.pPrev;
+
+                _listSize--;
 
                 return resultValue;
             }
